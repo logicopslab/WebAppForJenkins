@@ -1,18 +1,24 @@
 pipeline {
     agent any
-    tools {
-        maven "3.6.3"
-    }
+
     stages {
-        stage('Clean and Install') {
+        stage('Copy repo') {
             steps {
-               bat 'mvn clean install'
+                // Get some code from a GitHub repository
+                git branch: 'main', url: 'https://github.com/Novman47/WebAppForJenkins.git'
             }
         }
-        stage('Package') {
+        stage('Build Artifact') {
             steps {
-               bat 'mvn package'
+                // Run Maven on a Unix agent.
+                sh "mvn clean install"
             }
-        } 
-    }
+        }
+        stage('Build Package') {
+            steps {
+                // Run Maven on a Unix agent.
+                sh "mvn package"
+            }
+        }
+    } // <-- add this closing curly brace to close the 'stages' block
 }
